@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hello World</title>
+    <title>好好学习，一起进步</title>
     <url>/2020/07/27/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+    <content><![CDATA[<h2 id="第一个博客的第一篇文章"><a href="#第一个博客的第一篇文章" class="headerlink" title="第一个博客的第一篇文章"></a>第一个博客的第一篇文章</h2><h3 id="关于作者"><a href="#关于作者" class="headerlink" title="关于作者"></a>关于作者</h3><p>作者只是一个传统的 CRUD 程序员，但是有一个架构师的心。这个博客将作为作者成长的记录。</p>
+<h3 id="关于文章内容选择"><a href="#关于文章内容选择" class="headerlink" title="关于文章内容选择"></a>关于文章内容选择</h3><p>文章将主要集中在核心的容易被人忽略的话题上，通过文档可以轻易注意的内容将会被忽略的地方。或许对于大神来说，这些东西早已掌握，但是对于初级开发人员，这些东西将会以普通程序员的视角进行叙述。哪个 Dota 选手不是从蓝胖，斧王等容易跳刀切入的点，给人信心的点入门的，我们的内容也一样，会尽量避免灰色不用的内容，主要聚焦于工程常会遇到的问题。</p>
+<h3 id="关于文章风格"><a href="#关于文章风格" class="headerlink" title="关于文章风格"></a>关于文章风格</h3><p>作者的文档被同行批评过，内容过于口水话。没有，但是对于各种英文简称恐惧，作者会在文章的英文简称中，尽量附上其中文解释。但是，对于 handle （句柄）这种反人类的中文翻译，对于初学者严重不友好的名词，本人会尽量附上说人话的连接。总之，文章的宗旨就是，让每一个跟作者匹配王者荣耀的人都能读懂作者的文章。</p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>希望大家共勉，对于文章以及技术提出宝贵的意见，不胜感激。</p>
+<p>（请不要提关于技术之外的话题，尤其是 Dota 这种老年人的游戏是用什么英雄入门的问题）</p>
 ]]></content>
   </entry>
   <entry>
