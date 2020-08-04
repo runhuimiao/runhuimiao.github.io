@@ -11,11 +11,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>testing for talk</title>
-    <url>/2020/08/04/testing-for-talk/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Postgres Basic Info</title>
     <url>/2020/07/27/Postgres-Basic-Info/</url>
     <content><![CDATA[<h1 id="Postgres-学习第一天"><a href="#Postgres-学习第一天" class="headerlink" title="Postgres 学习第一天"></a>Postgres 学习第一天</h1><p>声明分区<br>继承分区</p>
