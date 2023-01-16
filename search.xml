@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Postgres Basic Info</title>
+    <url>/2020/07/27/Postgres-Basic-Info/</url>
+    <content><![CDATA[<h1 id="Postgres-学习第一天"><a href="#Postgres-学习第一天" class="headerlink" title="Postgres 学习第一天"></a>Postgres 学习第一天</h1><p>声明分区<br>继承分区</p>
+<h3 id="为什么要分区"><a href="#为什么要分区" class="headerlink" title="为什么要分区"></a>为什么要分区</h3><p>划分指的是将逻辑上的一个大表分成一些小的物理上的片。划分有很多益处：<br>在某些情况下查询性能能够显著提升，特别是当那些访问压力大的行在一个分区或者少数几个分区时。划分可以取代索引的主导列、减小索引尺寸以及使索引中访问压力大的部分更有可能被放在内存中。<br>当查询或更新访问一个分区的大部分行时，可以通过该分区上的一个顺序扫描来取代分散到整个表上的索引和随机访问，这样可以改善性能。<br>如果需求计划使用划分设计，可以通过增加或移除分区来完成批量载入和删除。 执行<code>ALTER TABLE DETACH PARTITION</code>或者使用<code>DROP TABLE</code> 删除一个单独的分区都远快于一个批量操作。这些命令也完全避免了由批量<code>DELETE</code>造成的<code>VACUUM</code>负载。<br>很少使用的数据可以被迁移到便宜且较慢的存储介质上。<br>当一个表非常大时，划分所带来的好处是非常值得的。一个表何种情况下会从划分获益取决于应用，一个经验法则是当表的尺寸超过了数据库服务器物理内存时，划分会为表带来好处。</p>
+<h3 id="声明分区"><a href="#声明分区" class="headerlink" title="声明分区"></a>声明分区</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">CREATE TABLE measurement (</span><br><span class="line">    city_id         int not null,</span><br><span class="line">    logdate         date not null,</span><br><span class="line">    peaktemp        int,</span><br><span class="line">    unitsales       int</span><br><span class="line">) PARTITION BY RANGE (logdate);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">CREATE TABLE measurement_y2006m02 PARTITION OF measurement</span><br><span class="line">    FOR VALUES FROM (&#x27;2006-02-01&#x27;) TO (&#x27;2006-03-01&#x27;)</span><br><span class="line"></span><br><span class="line">CREATE TABLE measurement_y2006m03 PARTITION OF measurement</span><br><span class="line">    FOR VALUES FROM (&#x27;2006-03-01&#x27;) TO (&#x27;2006-04-01&#x27;)</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line">CREATE TABLE measurement_y2007m11 PARTITION OF measurement</span><br><span class="line">    FOR VALUES FROM (&#x27;2007-11-01&#x27;) TO (&#x27;2007-12-01&#x27;)</span><br><span class="line"></span><br><span class="line">CREATE TABLE measurement_y2007m12 PARTITION OF measurement</span><br><span class="line">    FOR VALUES FROM (&#x27;2007-12-01&#x27;) TO (&#x27;2008-01-01&#x27;)</span><br><span class="line">    TABLESPACE fasttablespace;</span><br><span class="line"></span><br><span class="line">CREATE TABLE measurement_y2008m01 PARTITION OF measurement</span><br><span class="line">    FOR VALUES FROM (&#x27;2008-01-01&#x27;) TO (&#x27;2008-02-01&#x27;)</span><br><span class="line">    TABLESPACE fasttablespace</span><br><span class="line">    WITH (parallel_workers = 4);</span><br></pre></td></tr></table></figure>
+
+<h3 id="继承分区"><a href="#继承分区" class="headerlink" title="继承分区"></a>继承分区</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">CREATE TABLE measurement (</span><br><span class="line">    city_id         int not null,</span><br><span class="line">    logdate         date not null,</span><br><span class="line">    peaktemp        int,</span><br><span class="line">    unitsales       int</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">CREATE TABLE measurement_y2006m02 () INHERITS (measurement);</span><br><span class="line">CREATE TABLE measurement_y2006m03 () INHERITS (measurement);</span><br><span class="line">...</span><br><span class="line">CREATE TABLE measurement_y2007m11 () INHERITS (measurement);</span><br><span class="line">CREATE TABLE measurement_y2007m12 () INHERITS (measurement);</span><br><span class="line">CREATE TABLE measurement_y2008m01 () INHERITS (measurement);</span><br><span class="line"></span><br><span class="line">CHECK ( x = 1 )</span><br><span class="line">CHECK ( county IN ( &#x27;Oxfordshire&#x27;, &#x27;Buckinghamshire&#x27;, &#x27;Warwickshire&#x27; ))</span><br><span class="line">CHECK ( outletID &gt;= 100 AND outletID &lt; 200 )</span><br></pre></td></tr></table></figure>
+
+<h3 id="学习使用-WITH-（尤其适合树状存储的数据）"><a href="#学习使用-WITH-（尤其适合树状存储的数据）" class="headerlink" title="学习使用 WITH （尤其适合树状存储的数据）"></a>学习使用 WITH （尤其适合树状存储的数据）</h3><p>在使用 with 的条件下， 可是实现递归调用<br>如求 1 到 100 的问题可以写成如下格式</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">WITH RECURSIVE t(n) AS (</span><br><span class="line">    VALUES (1)</span><br><span class="line">  UNION ALL</span><br><span class="line">    SELECT n+1 FROM t WHERE n &lt; 100</span><br><span class="line">)</span><br><span class="line">SELECT sum(n) FROM t;</span><br></pre></td></tr></table></figure>
+
+<p>如果我们要瞬间拿到所有用户组的信息，就需要</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">with recursive all_customgroup(name) as (</span><br><span class="line">        select a2.name from fingerprint_customgroup as a1, fingerprint_customgroup as a2 where a1.name = &#x27;A&#x27; and a2.parent_id = a1.id</span><br><span class="line">    union ALL</span><br><span class="line">        select a4.name from fingerprint_customgroup as a3, fingerprint_customgroup as a4, all_customgroup as a5 where a5.name = a3.name and a4.parent_id = a3.id</span><br><span class="line">)</span><br><span class="line">select string_agg(name,&#x27;,&#x27;) from all_customgroup</span><br></pre></td></tr></table></figure>
+
+<p>可以在 0.008 秒内拿到所有的子用户组的 name，并用逗号隔开，当然这显然不如通过 id 直接搜索强大</p>
+<h3 id="诡异的-tsvector-和-tsquery"><a href="#诡异的-tsvector-和-tsquery" class="headerlink" title="诡异的 tsvector 和 tsquery"></a>诡异的 tsvector 和 tsquery</h3><p>这两个主要用来文本搜索。并且默认不支持中文。主要作用在一个行的一个字段中的文中，全文搜索，会自动忽略大写忽略单词的进行时 等其他语态等。尽量保留单词的原型。</p>
+<p><code>pg_lsn</code>数据类型可以被用来存储 LSN（日志序列号）数据，LSN 是一个指向 WAL 中的位置的指针。这个类型是<code>XLogRecPtr</code>的一种表达并且是 PostgreSQL的一种内部系统类型。</p>
+]]></content>
+      <tags>
+        <tag>postgres</tag>
+        <tag>postgresSQL</tag>
+        <tag>basic</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>好好学习，一起进步</title>
+    <url>/2023/01/14/hello-world/</url>
+    <content><![CDATA[<h2 id="第一个博客的第一篇文章"><a href="#第一个博客的第一篇文章" class="headerlink" title="第一个博客的第一篇文章"></a>第一个博客的第一篇文章</h2><h3 id="关于作者"><a href="#关于作者" class="headerlink" title="关于作者"></a>关于作者</h3><p>作者只是一个传统的 CRUD 程序员，但是有一个架构师的心。这个博客将作为作者成长的记录。</p>
+<h3 id="关于文章内容选择"><a href="#关于文章内容选择" class="headerlink" title="关于文章内容选择"></a>关于文章内容选择</h3><p>文章将主要集中在核心的容易被人忽略的话题上，而对于通过文档可以轻易百度的内容将会被忽略。对于有经验的开发人员来说，这些东西早已掌握。但是对于初级开发人员，这些东西将会以普通程序员的视角进行探索和讨论以及提出优化条件。就像每个 Dota 选手都是从蓝胖，斧王等容易切入的点，玩起，慢慢建立信心，循序渐进的入门，我们的内容也一样，会尽量选择我们平常认知的知识，慢慢深入，主要聚焦于工程常会遇到的问题。而不是茴的四种写法</p>
+<h3 id="关于文章风格"><a href="#关于文章风格" class="headerlink" title="关于文章风格"></a>关于文章风格</h3><p>作者的文档被批评过，内容过于口水话，专业属于不多，但作者将暂时保持这种风格，保持容易理解和提高专业程度。作者本人，对于各种英文简称恐惧，作者会在文章的英文简称中，尽量附上其中文解释。但是，对于 handle（句柄）这种反人类的中文翻译，对于初学者严重不友好的名词，作者会尽量附上说人话的链接。总之，文章的宗旨就是，让每一个跟作者匹配王者荣耀的人都能读懂作者的文章。</p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>希望大家共勉，对于文章以及技术提出宝贵的意见，不胜感激。</p>
+<p>（请不要提关于技术之外的话题，尤其是 Dota 这种老年人的游戏是用什么英雄入门的问题）</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>2023 new milestone</title>
+    <url>/2023/01/16/2023-new-milestone/</url>
+    <content><![CDATA[<h1 id="This-is-the-new-year"><a href="#This-is-the-new-year" class="headerlink" title="This is the new year"></a>This is the new year</h1><p>I will continue to record my knowledge.</p>
+<h2 id="Azure-part"><a href="#Azure-part" class="headerlink" title="Azure part"></a>Azure part</h2><p>I will introduce the knowledge of managed identity and service principal. This is base for all azure services.</p>
+<h2 id="SQL-Part"><a href="#SQL-Part" class="headerlink" title="SQL Part"></a>SQL Part</h2><h2 id="What-else"><a href="#What-else" class="headerlink" title="What else?"></a>What else?</h2>]]></content>
+  </entry>
+</search>
